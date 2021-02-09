@@ -3,6 +3,8 @@
 /_yardoc/
 /coverage/
 /doc/
+/example/~$*.xlsx
+/example/rendered.xlsx
 /pkg/
 /spec/reports/
 /tmp/
