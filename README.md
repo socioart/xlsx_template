@@ -1,28 +1,35 @@
 # XlsxTemplate
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/xlsx_template`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Create .xlsx from .xlsx file with Handlebars like syntax.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'xlsx_template'
+gem 'xlsx_template', git: "https://github.com/socioart/xlsx_template.git"
 ```
 
 And then execute:
 
     $ bundle install
 
-Or install it yourself as:
+## Limitation
 
-    $ gem install xlsx_template
+* Does not workbook with any formula.
 
 ## Usage
 
-TODO: Write usage instructions here
+See `example` directory.
+
+### beforeRow
+
+If `A1` cell value is `beforeRow`, column `A` has been interpreted specially.
+
+- `{{#if TOP_LEVEL_VARIABLE_NAME}}` If value of `TOP_LEVEL_VARIABLE_NAME` is *not* truthy (`nil, false, "", 0, or []`), remove row.
+- `{{#each TOP_LEVEL_VARIABLE_NAME}}` Repeats row for value of `TOP_LEVEL_VARIABLE_NAME`.
+
+In the output file, values of column `A` are removed and the column is hidden.
 
 ## Development
 
