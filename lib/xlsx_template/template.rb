@@ -38,12 +38,9 @@ module XlsxTemplate
             variable = variables.fetch(before_row[1].to_sym)
             unless truthy?(variable)
               worksheet.delete_row(row_index)
-              after_delete_row(worksheet, row_index)
-              # row_index += 1
               next # 削除したので row_index 増やさず次へ
             end
           when :each
-            require "byebug"
             template_row_index = row_index
             items = variables.fetch(before_row[1].to_sym)
 
@@ -55,7 +52,6 @@ module XlsxTemplate
               items.each do |item|
                 row_index += 1
                 worksheet.insert_row(row_index)
-                after_insert_row(worksheet, row_index)
                 worksheet.change_row_height(row_index, row_height)
                 merges.each do |m|
                   worksheet.merge_cells(row_index, m.first, row_index, m.last)
@@ -67,8 +63,6 @@ module XlsxTemplate
             end
 
             worksheet.delete_row(template_row_index)
-            after_delete_row(worksheet, row_index)
-            # row_index += 1
             next # 削除したので row_index 増やさず次へ
           end
 
@@ -84,31 +78,6 @@ module XlsxTemplate
     end
 
     private
-    # 行挿入後に既存のセル結合の値を修正
-    def after_insert_row(worksheet, inserted_row_index)
-      worksheet.merged_cells.select {|mc| mc.ref.row_range.first >= inserted_row_index }.each {|mc|
-        mc.ref = RubyXL::Reference.new(
-          mc.ref.row_range.first + 1,
-          mc.ref.row_range.last + 1,
-          mc.ref.col_range.first,
-          mc.ref.col_range.last,
-        )
-      }
-    end
-
-    # 行削除後に既存のセル結合の値を修正
-    def after_delete_row(worksheet, deleted_row_index)
-      worksheet.merged_cells.delete_if {|mc| mc.ref.row_range == (deleted_row_index..deleted_row_index) }
-      worksheet.merged_cells.select {|mc| mc.ref.row_range.first > deleted_row_index }.each {|mc|
-        mc.ref = RubyXL::Reference.new(
-          mc.ref.row_range.first - 1,
-          mc.ref.row_range.last - 1,
-          mc.ref.col_range.first,
-          mc.ref.col_range.last,
-        )
-      }
-    end
-
     def parse_before_row(s)
       case s.to_s.strip
       when ""
@@ -140,7 +109,6 @@ module XlsxTemplate
         compiled = handlebars.compile(cell.value).call(stackframe)
 
         worksheet[row_index][column_index].change_contents(compiled)
-        # p [cell.value, compiled] if cell.value != compiled
       end
     end
 
