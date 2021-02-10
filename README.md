@@ -8,6 +8,7 @@ Add this line to your application's Gemfile:
 
 ```ruby
 gem 'xlsx_template', git: "https://github.com/socioart/xlsx_template.git"
+gem "rubyXL", git: "https://github.com/labocho/rubyXL.git", ref: "shift-merged-cells" # rubyXL 3.4.16 does not support insert/delete row with merged cells, use patched version
 ```
 
 And then execute:
