@@ -28,5 +28,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ruby-handlebars", "~> 0.4.0"
-  spec.add_dependency "rubyXL", "~> 3.4"
+  spec.add_dependency "rubyXL", "~> 3.4.17"
 end
