@@ -27,8 +27,13 @@ module XlsxTemplate
 
         row_index = 1 # 処理中に行数が変わるので each など使わず index で
         loop do
+          break unless row_index < worksheet.sheet_data.rows.size
+
           row = worksheet[row_index]
-          break if row.nil?
+          if row.nil?
+            row_index += 1
+            next
+          end
 
           before_row = parse_before_row(row[before_row_column_index]&.value)
           worksheet[row_index][before_row_column_index].change_contents("") if before_row # beforeRow の値を出力に含めない
@@ -96,7 +101,7 @@ module XlsxTemplate
 
       ((before_row_column_index + 1)...row.cells.size).each do |column_index|
         cell = worksheet[row_index][column_index]
-        break if cell.nil?
+        next if cell.nil?
         next if cell.value.nil?
 
         case cell.datatype
@@ -117,7 +122,7 @@ module XlsxTemplate
       ((before_row_column_index + 1)...row.cells.size).each do |column_index|
         cell = worksheet[row_index][column_index]
         value = values[column_index]
-        break if cell.nil?
+        next if cell.nil?
         next if value.nil?
 
         worksheet[row_index][column_index].change_contents(value)
